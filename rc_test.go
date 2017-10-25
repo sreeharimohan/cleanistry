@@ -3,13 +3,13 @@ package main
 import "testing"
 
 func TestIsTagExcemptedFromDeletion(t *testing.T) {
-	IsTagExcemptedFromDeletion("apigateway-master", "20170908142341")
-	t.Fail()
+	_, err := IsTagExcemptedFromDeletion("apigateway-master", "20170908142341")
+	FailOnError(err)
 }
 
 func TestLatestTag(t *testing.T) {
-	isExcempt := IsTagExcemptedFromDeletion("j7t7", "latest")
-	if !isExcempt {
+	isExcempt, err := IsTagExcemptedFromDeletion("j7t7", "latest")
+	if !isExcempt || err != nil {
 		t.Fail()
 	}
 }

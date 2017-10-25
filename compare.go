@@ -6,17 +6,23 @@ import (
 )
 
 // IsImageTagOutdated ...
-func IsImageTagOutdated(image string, tag string) bool {
-	dateString := GetTagCreatedDate(image, tag)
+func IsImageTagOutdated(image string, tag string) (bool, error) {
+	dateString, err := GetTagCreatedDate(image, tag)
+	if err != nil {
+		return false, err
+	}
 	if dateString == "" {
 		log.Printf("Unknown Date - %s:%s", image, tag)
-		return false
+		return false, nil
 	}
 	date, err := time.Parse(time.RFC3339Nano, dateString)
-	FailOnError(err)
-	duration := time.Since(date)
-	if duration.Hours() > 720 {
-		return true
+	if err != nil {
+		return false, err
 	}
-	return false
+	duration := time.Since(date)
+	log.Printf("Hours since build time : %f", duration.Hours())
+	if duration.Hours() > 720 {
+		return true, nil
+	}
+	return false, nil
 }

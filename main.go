@@ -3,15 +3,37 @@ package main
 import "log"
 
 func main() {
-	allRepos := GetAllReposInRegistry()
+	tagsDeleted := 0
+	allRepos, err := GetAllReposInRegistry()
+	FailOnError(err)
 	for _, singleRepo := range allRepos {
-		allTags := GetListOfTagsForRepo(singleRepo)
+		allTags, err := GetListOfTagsForRepo(singleRepo)
+		if err != nil {
+			log.Printf("Unable to get list of tags for repo %s", singleRepo)
+			continue
+		}
 		for _, singleTag := range allTags {
-			if !IsTagExcemptedFromDeletion(singleRepo, singleTag) {
-				if IsImageTagOutdated(singleRepo, singleTag) {
-					log.Printf("%s:%s", singleRepo, singleTag)
-					contentDigest := GetContentDigest(singleRepo, singleTag)
+			log.Printf("%s:%s", singleRepo, singleTag)
+			isExcempt, err := IsTagExcemptedFromDeletion(singleRepo, singleTag)
+			if err != nil {
+				log.Printf("Unable to determine if tag %s is excempt for repo %s. Error : %s", singleTag, singleRepo, err.Error())
+				continue
+			}
+			if !isExcempt {
+				isOutdate, err := IsImageTagOutdated(singleRepo, singleTag)
+				if err != nil {
+					log.Printf("Unable to determine if tag %s is outdate for repo %s", singleTag, singleRepo)
+					continue
+				}
+				if isOutdate {
+					contentDigest, err := GetContentDigest(singleRepo, singleTag)
+					if err != nil {
+						log.Printf("Unable to get content digest for tag %s in repo %s", singleTag, singleRepo)
+					}
 					log.Println(DeleteDigest(singleRepo, contentDigest))
+					log.Printf(">>>>>> Deletion Done <<<<<<")
+					tagsDeleted++
+					log.Printf("Total number of tags deleted: %d", tagsDeleted)
 				}
 			}
 		}

@@ -33,48 +33,58 @@ type TagDetailsResponse struct {
 }
 
 // GetAllReposInRegistry ...
-func GetAllReposInRegistry() []string {
+func GetAllReposInRegistry() ([]string, error) {
 	var catalogResponse CatalogResponse
 	_, _, err := Get("http://dockerhub.myntra.com:8080/v2/_catalog?n=50000", false, &catalogResponse)
-	FailOnError(err)
-	return catalogResponse.Repositories
+	if err != nil {
+		return []string{}, err
+	}
+	return catalogResponse.Repositories, nil
 }
 
 // GetListOfTagsForRepo ...
-func GetListOfTagsForRepo(repo string) []string {
+func GetListOfTagsForRepo(repo string) ([]string, error) {
 	var tagListResponse TagListResponse
 	_, _, err := Get("http://dockerhub.myntra.com:8080/v2/"+repo+"/tags/list", false, &tagListResponse)
-	FailOnError(err)
-	return tagListResponse.Tags
+	if err != nil {
+		return []string{}, err
+	}
+	return tagListResponse.Tags, nil
 }
 
 // GetTagCreatedDate ...
-func GetTagCreatedDate(repo string, tag string) string {
+func GetTagCreatedDate(repo string, tag string) (string, error) {
 	var tagDetailsResponse TagDetailsResponse
 	var hs HistorySet
 	_, _, err := Get("http://dockerhub.myntra.com:8080/v2/"+repo+"/manifests/"+tag, false, &tagDetailsResponse)
-	FailOnError(err)
+	if err != nil {
+		return "", err
+	}
 	objectString := strings.Replace(tagDetailsResponse.History[0].V1Compatibility, "\\", "", -1)
 	// log.Println(objectString)
 	json.Unmarshal([]byte(objectString), &hs)
 	// log.Println(hs)
-	return hs.Created
+	return hs.Created, nil
 }
 
 // GetContentDigest ...
-func GetContentDigest(repo string, tag string) string {
+func GetContentDigest(repo string, tag string) (string, error) {
 	// acceptContent = append(acceptContent, "")
 	// requestHeaders[""] = acceptContent
 	_, res, err := Get("http://dockerhub.myntra.com:8080/v2/"+repo+"/manifests/"+tag, true, nil)
-	FailOnError(err)
+	if err != nil {
+		return "", err
+	}
 	// log.Println()
-	return res.Header["Docker-Content-Digest"][0]
+	return res.Header["Docker-Content-Digest"][0], nil
 }
 
 // DeleteDigest ...
-func DeleteDigest(repo string, digest string) int {
+func DeleteDigest(repo string, digest string) (int, error) {
 	var data struct{}
 	resCode, err := Delete("http://dockerhub.myntra.com:8080/v2/"+repo+"/manifests/"+digest, true, data, nil)
-	FailOnError(err)
-	return resCode
+	if err != nil {
+		return resCode, err
+	}
+	return resCode, nil
 }
