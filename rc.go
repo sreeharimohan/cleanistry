@@ -14,6 +14,9 @@ type ReleaseCandidate struct {
 
 // IsTagExcemptedFromDeletion ...
 func IsTagExcemptedFromDeletion(image string, tag string) bool {
+	if tag == "latest" {
+		return true
+	}
 	var rcs []*ReleaseCandidate
 	_, _, err := Get("http://localhost:4000/data/getRC/"+image+"/"+tag, false, &rcs)
 	FailOnError(err)
