@@ -35,7 +35,7 @@ type TagDetailsResponse struct {
 // GetAllReposInRegistry ...
 func GetAllReposInRegistry() ([]string, error) {
 	var catalogResponse CatalogResponse
-	_, _, err := Get("http://dockerhub.myntra.com:8080/v2/_catalog?n=50000", false, &catalogResponse)
+	_, _, err := Get("http://"+GetDockerHostURL()+"/v2/_catalog?n="+GetCatalogLimit(), false, &catalogResponse)
 	if err != nil {
 		return []string{}, err
 	}
@@ -45,7 +45,7 @@ func GetAllReposInRegistry() ([]string, error) {
 // GetListOfTagsForRepo ...
 func GetListOfTagsForRepo(repo string) ([]string, error) {
 	var tagListResponse TagListResponse
-	_, _, err := Get("http://dockerhub.myntra.com:8080/v2/"+repo+"/tags/list", false, &tagListResponse)
+	_, _, err := Get("http://"+GetDockerHostURL()+"/v2/"+repo+"/tags/list", false, &tagListResponse)
 	if err != nil {
 		return []string{}, err
 	}
@@ -56,7 +56,7 @@ func GetListOfTagsForRepo(repo string) ([]string, error) {
 func GetTagCreatedDate(repo string, tag string) (string, error) {
 	var tagDetailsResponse TagDetailsResponse
 	var hs HistorySet
-	_, _, err := Get("http://dockerhub.myntra.com:8080/v2/"+repo+"/manifests/"+tag, false, &tagDetailsResponse)
+	_, _, err := Get("http://"+GetDockerHostURL()+"/v2/"+repo+"/manifests/"+tag, false, &tagDetailsResponse)
 	if err != nil {
 		return "", err
 	}
@@ -71,7 +71,7 @@ func GetTagCreatedDate(repo string, tag string) (string, error) {
 func GetContentDigest(repo string, tag string) (string, error) {
 	// acceptContent = append(acceptContent, "")
 	// requestHeaders[""] = acceptContent
-	_, res, err := Get("http://dockerhub.myntra.com:8080/v2/"+repo+"/manifests/"+tag, true, nil)
+	_, res, err := Get("http://"+GetDockerHostURL()+"/v2/"+repo+"/manifests/"+tag, true, nil)
 	if err != nil {
 		return "", err
 	}
@@ -82,7 +82,7 @@ func GetContentDigest(repo string, tag string) (string, error) {
 // DeleteDigest ...
 func DeleteDigest(repo string, digest string) (int, error) {
 	var data struct{}
-	resCode, err := Delete("http://dockerhub.myntra.com:8080/v2/"+repo+"/manifests/"+digest, true, data, nil)
+	resCode, err := Delete("http://"+GetDockerHostURL()+"/v2/"+repo+"/manifests/"+digest, true, data, nil)
 	if err != nil {
 		return resCode, err
 	}

@@ -5,6 +5,6 @@ import (
 )
 
 func TestIsImageTagOutdated(t *testing.T) {
-	isOutdated, err := IsImageTagOutdated("absolut-saloni_vb", "0910506-1ba49d7")
+	_, err := IsImageTagOutdated("absolut-saloni_vb", "0910506-1ba49d7")
 	FailOnError(err)
 }

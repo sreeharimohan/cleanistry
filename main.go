@@ -3,7 +3,9 @@ package main
 import "log"
 
 func main() {
+	CheckAndGetConfigs()
 	tagsDeleted := 0
+	// Getting all repositories from a private docker hub
 	allRepos, err := GetAllReposInRegistry()
 	FailOnError(err)
 	for _, singleRepo := range allRepos {
