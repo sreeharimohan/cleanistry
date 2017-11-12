@@ -1,29 +1,36 @@
 package main
 
+import "log"
+
 // ReleaseCandidate ...
 type ReleaseCandidate struct {
-	AppRpmArtifact string `json:"appRpmArtifact"`
-	ClusterName    string `json:"clusterName"`
-	Date           string `json:"date"`
-	DockerImage    string `json:"dockerImage"`
-	OpsRpmArtifact string `json:"opsRpmArtifact"`
-	ServiceName    string `json:"serviceName"`
-	UserEmail      string `json:"userEmail"`
-	Username       string `json:"username"`
+	// AppRpmArtifact string `json:"appRpmArtifact"`
+	// ClusterName    string `json:"clusterName"`
+	// Date           string `json:"date"`
+	// DockerImage    string `json:"dockerImage"`
+	// OpsRpmArtifact string `json:"opsRpmArtifact"`
+	// ServiceName    string `json:"serviceName"`
+	// UserEmail      string `json:"userEmail"`
+	// Username       string `json:"username"`
+	IsTagExcempt bool `json:"isTagExcempt"`
 }
 
 // IsTagExcemptedFromDeletion ...
 func IsTagExcemptedFromDeletion(image string, tag string) (bool, error) {
-	if tag == "latest" {
+	if tag == "latest" && ShouldWeKeepLatestTag() {
+		log.Println("Excempt since it is the latest tag")
 		return true, nil
 	}
-	var rcs []*ReleaseCandidate
-	_, _, err := Get("http://localhost:4000/data/getRC/"+image+"/"+tag, false, &rcs)
-	if err != nil {
-		return true, err
+	if IsImageTagExcemptionAPIPresent() {
+		var rcs *ReleaseCandidate
+		_, _, err := Get("http://"+GetImageTagExcemptionTestAPI()+"/"+image+"/"+tag, false, &rcs)
+		if err != nil {
+			log.Println("API error")
+			log.Fatal(err)
+		}
+		log.Printf("Excempt response from API: %v", rcs.IsTagExcempt)
+		return rcs.IsTagExcempt, nil
 	}
-	if len(rcs) == 1 {
-		return true, nil
-	}
+	log.Println("API not present")
 	return false, nil
 }
