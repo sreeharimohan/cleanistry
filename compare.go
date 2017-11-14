@@ -21,7 +21,7 @@ func IsImageTagOutdated(image string, tag string) (bool, error) {
 	}
 	duration := time.Since(date)
 	log.Printf("Hours since build time : %f", duration.Hours())
-	if duration.Hours() > 240 {
+	if duration.Hours() > GetMaxImageLifetime() {
 		return true, nil
 	}
 	return false, nil

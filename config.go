@@ -9,11 +9,12 @@ import (
 
 // Configs ...
 type Configs struct {
-	DockerHostURL             string `split_words:"true"`
-	CatalogLimit              string `split_words:"true" default:"50000"`
-	KeepLatestTag             bool   `split_words:"true" default:"true"`
-	ImageTagExcemptionTestAPI string `split_words:"true"`
-	ImageTagExcemption        bool   `split_words:"true" default:"true"`
+	DockerHostURL             string  `split_words:"true"`
+	CatalogLimit              string  `split_words:"true" default:"50000"`
+	KeepLatestTag             bool    `split_words:"true" default:"true"`
+	ImageTagExcemptionTestAPI string  `split_words:"true"`
+	ImageTagExcemption        bool    `split_words:"true" default:"true"`
+	MaxImageLifetime          float64 `split_words:"true" default:"720"`
 }
 
 // GlobalConfigs ...
@@ -65,4 +66,9 @@ func GetImageTagExcemptionTestAPI() string {
 // IsImageTagExcemptionAPIPresent ...
 func IsImageTagExcemptionAPIPresent() bool {
 	return GlobalConfigs.ImageTagExcemption
+}
+
+// GetMaxImageLifetime ...
+func GetMaxImageLifetime() float64 {
+	return GlobalConfigs.MaxImageLifetime
 }

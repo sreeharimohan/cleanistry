@@ -4,14 +4,6 @@ import "log"
 
 // ReleaseCandidate ...
 type ReleaseCandidate struct {
-	// AppRpmArtifact string `json:"appRpmArtifact"`
-	// ClusterName    string `json:"clusterName"`
-	// Date           string `json:"date"`
-	// DockerImage    string `json:"dockerImage"`
-	// OpsRpmArtifact string `json:"opsRpmArtifact"`
-	// ServiceName    string `json:"serviceName"`
-	// UserEmail      string `json:"userEmail"`
-	// Username       string `json:"username"`
 	IsTagExcempt bool `json:"isTagExcempt"`
 }
 
