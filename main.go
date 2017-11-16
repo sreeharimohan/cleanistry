@@ -1,9 +1,24 @@
 package main
 
 import "log"
+import "github.com/robfig/cron"
 
 func main() {
-	CheckAndGetConfigs()
+	FailOnError(CheckAndGetConfigs())
+	if ShouldRunOnStart() {
+		run()
+	}
+	c := cron.New()
+	err := c.AddFunc(GetRunSchedule(), func() {
+		run()
+	})
+	if err != nil {
+		log.Fatalf("Unable to start cron due to error - %s", err.Error())
+	}
+	c.Start()
+}
+
+func run() {
 	tagsDeleted := 0
 	// Getting all repositories from a private docker hub
 	allRepos, err := GetAllReposInRegistry()

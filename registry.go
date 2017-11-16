@@ -75,7 +75,6 @@ func GetContentDigest(repo string, tag string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	// log.Println()
 	return res.Header["Docker-Content-Digest"][0], nil
 }
 

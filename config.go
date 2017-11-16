@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -15,36 +16,38 @@ type Configs struct {
 	ImageTagExcemptionTestAPI string  `split_words:"true"`
 	ImageTagExcemption        bool    `split_words:"true" default:"true"`
 	MaxImageLifetime          float64 `split_words:"true" default:"720"`
+	RunSchedule               string  `split_words:"true" default:"@daily"`
+	RunOnStart                bool    `split_words:"true" default:"false"`
 }
 
 // GlobalConfigs ...
 var GlobalConfigs Configs
 
 // CheckAndGetConfigs ...
-func CheckAndGetConfigs() {
+func CheckAndGetConfigs() error {
 	envconfig.Process("cleanistry", &GlobalConfigs)
 	if GlobalConfigs.DockerHostURL == "" {
-		log.Fatal("Environment variable CLEANISTRY_DOCKER_HOST_URL not found")
+		return fmt.Errorf("Environment variable CLEANISTRY_DOCKER_HOST_URL not found")
 	}
 	if !AbleToConnect("tcp", GlobalConfigs.DockerHostURL) {
-		log.Fatalf("Unable to connect to %s", GlobalConfigs.DockerHostURL)
+		return fmt.Errorf("Unable to connect to %s", GlobalConfigs.DockerHostURL)
 	}
 	if ShouldWeKeepLatestTag() {
 		log.Println("Keeping all images with the 'latest' tag")
 	}
 	if IsImageTagExcemptionAPIPresent() {
 		if GlobalConfigs.ImageTagExcemptionTestAPI == "" {
-			log.Fatalf("Ensure an ImageTag excemption API is configured using CLEANISTRY_IMAGE_TAG_EXCEMPTION_TEST_API or set CLEANISTRY_IMAGE_TAG_EXCEMPTION to false")
-		} else {
-			address := strings.Split(GlobalConfigs.ImageTagExcemptionTestAPI, "/")[0]
-			if !strings.Contains(address, ":") {
-				address += ":80"
-			}
-			if !AbleToConnect("tcp", address) {
-				log.Fatalf("Unable to connect to %s", address)
-			}
+			return fmt.Errorf("Ensure an ImageTag excemption API is configured using CLEANISTRY_IMAGE_TAG_EXCEMPTION_TEST_API or set CLEANISTRY_IMAGE_TAG_EXCEMPTION to false")
+		}
+		address := strings.Split(GlobalConfigs.ImageTagExcemptionTestAPI, "/")[0]
+		if !strings.Contains(address, ":") {
+			address += ":80"
+		}
+		if !AbleToConnect("tcp", address) {
+			return fmt.Errorf("Unable to connect to %s", address)
 		}
 	}
+	return nil
 }
 
 // GetDockerHostURL ...
@@ -75,4 +78,14 @@ func IsImageTagExcemptionAPIPresent() bool {
 // GetMaxImageLifetime ...
 func GetMaxImageLifetime() float64 {
 	return GlobalConfigs.MaxImageLifetime
+}
+
+// GetRunSchedule ...
+func GetRunSchedule() string {
+	return GlobalConfigs.RunSchedule
+}
+
+// ShouldRunOnStart ...
+func ShouldRunOnStart() bool {
+	return GlobalConfigs.RunOnStart
 }
