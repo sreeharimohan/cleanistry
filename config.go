@@ -36,8 +36,12 @@ func CheckAndGetConfigs() {
 		if GlobalConfigs.ImageTagExcemptionTestAPI == "" {
 			log.Fatalf("Ensure an ImageTag excemption API is configured using CLEANISTRY_IMAGE_TAG_EXCEMPTION_TEST_API or set CLEANISTRY_IMAGE_TAG_EXCEMPTION to false")
 		} else {
-			if !AbleToConnect("tcp", strings.Split(GlobalConfigs.ImageTagExcemptionTestAPI, "/")[0]) {
-				log.Fatalf("Unable to connect to %s", GlobalConfigs.ImageTagExcemptionTestAPI)
+			address := strings.Split(GlobalConfigs.ImageTagExcemptionTestAPI, "/")[0]
+			if !strings.Contains(address, ":") {
+				address += ":80"
+			}
+			if !AbleToConnect("tcp", address) {
+				log.Fatalf("Unable to connect to %s", address)
 			}
 		}
 	}
