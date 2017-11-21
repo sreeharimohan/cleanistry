@@ -69,8 +69,6 @@ func GetTagCreatedDate(repo string, tag string) (string, error) {
 
 // GetContentDigest ...
 func GetContentDigest(repo string, tag string) (string, error) {
-	// acceptContent = append(acceptContent, "")
-	// requestHeaders[""] = acceptContent
 	_, res, err := Get("http://"+GetDockerHostURL()+"/v2/"+repo+"/manifests/"+tag, true, nil)
 	if err != nil {
 		return "", err

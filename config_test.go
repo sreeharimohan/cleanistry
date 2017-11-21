@@ -7,20 +7,19 @@ import (
 )
 
 func TestIsHostURLPresent(t *testing.T) {
-	os.Setenv("CLEANISTRY_DOCKER_HOST_URLS", "private-15e67c-cleanistry.apiary-mock.com:80")
 	CheckAndGetConfigs()
 }
 
 func TestIsDockerHostReachable(t *testing.T) {
-	os.Setenv("CLEANISTRY_DOCKER_HOST_URL", "private-15e67c-cleanistry.apiary-mock.com:8080")
+	os.Setenv("CLEANISTRY_DOCKER_HOST_URL", "unavailable.host.com:80")
 	err := CheckAndGetConfigs()
 	if err == nil {
 		t.Fail()
 	}
+	os.Setenv("CLEANISTRY_DOCKER_HOST_URL", "cleanistry.sreeharimohan.com:80")
 }
 
 func TestForDefaultCatalogLimit(t *testing.T) {
-	os.Setenv("CLEANISTRY_DOCKER_HOST_URL", "private-15e67c-cleanistry.apiary-mock.com:80")
 	CheckAndGetConfigs()
 	if GetCatalogLimit() != "50000" {
 		log.Fatal("Default value for Catalog Limit not picked up")
