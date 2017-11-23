@@ -1,16 +1,24 @@
-  language: go
-
-  go:
-    - 1.9
-
-  env:
-    - DEP_VERSION="0.3.2"
-
-  before_install:
-    # Download the binary to bin folder in $GOPATH
-    - curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 -o $GOPATH/bin/dep
-    # Make the binary executable
-    - chmod +x $GOPATH/bin/dep
-
-  install:
-    - dep ensure
+language: go
+go:
+- 1.9
+env:
+  matrix:
+  - DEP_VERSION="0.3.2"
+  global:
+  - secure: I/dks3g0RZ2oQJ6WEm20FsO8t2R/Ehr3zo0HpimonCF23Cfd1SAXj/Ssjy9g6Co11mx+aOscS634fQonShxUa0ei0YbbYbR/Vp5vYIEa9mwtsJMCgla6m82JYo+4Eyb7rBeRWiEbhnGY0WPAwk2wRerqiyW1q2UbPGcggtCqPzp49zh7F6q8hWOgnbrNRp/zlhR+9g9EitjINahinfsG0Kja0HJ7hrxYIsusxcaebMt30ld+a016TwkJmLpsOGkSiM/v6qymYNeBDf7IWS4u6i2E/n1cM38DBtep/vdTzR3pZ5+M2CH2W6on0k9DB9E3+i45ecSCxsM777Yggan0BgQL4TBjQLPi8H6mCekMZiZSfJnW1vZF8Jfx7z9fbXtXpaogbD0ELFsOUxtEOn+jxTXcEhmji1mLmCDf3hZyAtqNEk8utFymRL2Uj3ymLIgOlKUg4CvHJf6tWTbVzWGgBARtENu74Rw5c0naRh5xodNy0h/b4j3MmZ5YH9EdbKXozw3FUk9wo9xod/cQlLpU3Z246M9s2dw2FPgor3hUAcuV1Emlf58qDWuT+Oxfr5bax/BvZPp5llGPorn6DcuSb0ndLUzC9MXMTittb6HCWapqPtrhvAGFPktLLkCmJ4tkJsyMqaS4RT9msCpw+jtwEPj+KNU7XPDU49X714JgRIw= # DOCKER_USER
+  - secure: CJrZ5nH4HnlDh/OYDTxuWhsGZWBXlaS2OFy1jJUWhCupYXwIpmWMYeEqcopLi9ffaxnvlTBIMpDyW2FVbK480DtBm/unYGJOeEZHeoaV9JwYHvc1PCfWjy5Q0qtrd1Z8K1MIcrwKywOlT95XlCkBFrghCi4CEPMiqgVda7kXgxmhxYnpsh/ZyIwmQ+CTKaZVb8xH57ozDpSJhoyZ8QGM0j4rJf6uFOJC7gkqDDGlMfdqkbuDXMxLKWkc1GVt0xZuGw3BIrAdiF0thiObAUSqVURt/pgir0WIwYIymp296gOkJFcffvqSaTDBmGvbOGUZGvP8ghxvFNX03foFwv73P6TBVnU8vchzm/j6seWAVAjtEgn8CKB+SWOGSaBrdji87ZONZFvVzqeAbtkPnHM8IGu2OfYYtbkwT3ybVN0gwQFqnVV7Qp7/JKK9oQ+2Sx0tn0+ka57vm+b4IQoOyEtRWQoDL/8iUYyYMMqvlOpHPPAVlB329vUoLkmKqBrX1YulmEkysmR/RYj7artlt9KKZGh0SlZnYTFSV0K0YXz89l2HIYNNaJoIlu5bwgKYHJAhS//4xp4H3iOSWSB0jwcgVQA0pL74zhKGQ2wNmPzX/mluS6gWXvYXgZbODAz3JEeqMtdKkgcNyyvwWY5ysprmX8TVXSkfDx01rMM8iDDfrZg= # DOCKER_PASS
+  - secure: ETlA1eXMYgtKVFti4VwOKynSm8RUNd+PyZvqIpHfiHcwQYmHuXLqnuVGi/BUe424Oasx20yLAtwlFJod6ct6RiRg1X/+1l+kGsz3E4ydUwttB3fZTUB5xd2L8cEaE93HC9XHCWB/DYajgp6/rMWUNy9b7zWjw3P+M+JuB3EGaVJ9hw2Fdg9rk0Mntvaf2iYbZpq9G1pS73XzcKlitVqnIGp7uZpi1Waxa6s/M8XiY5qlqnCVsqVV02wKsQxMGIcFqEA0Bw9H0XsroLT8lheF7mxOR3fAoUu5MH/4mPzUArXb+LE4pj3m64O5QU0QCTeT7WNbpttLA1PNZy5mEp7ATXKX/rfRYVl8t74+W4qFXJI+z1OyHK0NCdsH/rN8qdqeX/ji9zvo2p6WeXjIpRp6xcgYBWwYWWU7zwjl1sVUYqq/Jqrj4SxZ+z3c8Ss9UHz1kzG+e2Sq4EiOTsAmyqO5w3/pdvFy9mxSZjVPBI8OxwtfGpJlnZG0J4UhQoI9MQUQicxEWokGC5/w0gR6j8Tfj17uGxLmZRLKehLkmWlmJgxXR1V++JW9OGJ4t2XudMvM7NsSKDCsfExlGthmRzRBaWZP+OKhkMNeDxcKI0x3oEYUpH+n/cNtNeug/87nm+9pkoOtLkwesm35LwEVTawvizmvDP1ujFW2DpRivBAJKYk= # DOCKER_EMAIL
+before_install:
+- curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64
+  -o $GOPATH/bin/dep
+- chmod +x $GOPATH/bin/dep
+install:
+- dep ensure
+after_success:
+- docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+- export REPO=sreeharimohan/cleanistry
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+- docker build -f Dockerfile -t $REPO:$COMMIT .
+- docker tag $REPO:$COMMIT $REPO:$TAG
+- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+- docker push $REPO

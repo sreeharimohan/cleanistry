@@ -55,6 +55,8 @@ func run() {
 			}
 		}
 	}
+	// Run garbage-collect on registry
+	FailOnError(RunRegistryGarbageCollection())
 }
 
 // FailOnError ...

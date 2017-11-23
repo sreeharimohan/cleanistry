@@ -18,6 +18,7 @@ type Configs struct {
 	MaxImageLifetime          float64 `split_words:"true" default:"720"`
 	RunSchedule               string  `split_words:"true" default:"@daily"`
 	RunOnStart                bool    `split_words:"true" default:"false"`
+	GarbageCollectCommand     string  `split_words:"true" default:"docker exec registry registry garbage-collect /etc/docker/registry/config.yml"`
 }
 
 // GlobalConfigs ...
@@ -88,4 +89,9 @@ func GetRunSchedule() string {
 // ShouldRunOnStart ...
 func ShouldRunOnStart() bool {
 	return GlobalConfigs.RunOnStart
+}
+
+// GetGarbageCollectCommand ...
+func GetGarbageCollectCommand() []string {
+	return strings.Fields(GlobalConfigs.GarbageCollectCommand)
 }
