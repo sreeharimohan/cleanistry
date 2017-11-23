@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sreeharimohan/cleanistry.svg?branch=master)](https://travis-ci.org/sreeharimohan/cleanistry) [![Coverage Status](https://coveralls.io/repos/github/sreeharimohan/cleanistry/badge.svg)](https://coveralls.io/github/sreeharimohan/cleanistry)
+[![Build Status](https://travis-ci.org/sreeharimohan/cleanistry.svg?branch=master)](https://travis-ci.org/sreeharimohan/cleanistry) [![Coverage Status](https://coveralls.io/repos/github/sreeharimohan/cleanistry/badge.svg)](https://coveralls.io/github/sreeharimohan/cleanistry) [![Go Report Card](https://goreportcard.com/badge/github.com/sreeharimohan/cleanistry)](https://goreportcard.com/report/github.com/sreeharimohan/cleanistry)
 
 # cleanistry
 Docker Registry Cleanup Cron runs as a docker container on the same machine as your v2 registry
