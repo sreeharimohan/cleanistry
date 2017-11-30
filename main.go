@@ -16,6 +16,7 @@ func main() {
 		log.Fatalf("Unable to start cron due to error - %s", err.Error())
 	}
 	c.Start()
+	<-make(chan struct{})
 }
 
 func run() {
