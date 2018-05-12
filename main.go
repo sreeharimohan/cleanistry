@@ -50,7 +50,7 @@ func run() {
 					if err != nil {
 						log.Printf("Unable to get content digest for tag %s in repo %s", singleTag, singleRepo)
 					} else {
-						DeleteDigest(singleRepo, contentDigest)
+						err = DeleteDigest(singleRepo, contentDigest)
 						if err != nil {
 							log.Printf("Unable to delete digest for tag %s in repo %s", singleTag, singleRepo)
 						} else {
