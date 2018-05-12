@@ -34,6 +34,7 @@ func run() {
 			continue
 		}
 		for _, singleTag := range allTags {
+			log.Printf("%s:%s", singleRepo, singleTag)
 			isExcempt, err := IsTagExcemptedFromDeletion(excemptedTags, singleTag)
 			if err != nil {
 				log.Printf("Unable to determine if tag %s is excempt for repo %s. Error : %s", singleTag, singleRepo, err.Error())
