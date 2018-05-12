@@ -5,7 +5,7 @@ import "testing"
 func TestIsTagExcemptedFromDeletion(t *testing.T) {
 	CheckAndGetConfigs()
 	_, err := IsTagExcemptedFromDeletion([]string{"tagName1"}, "tagName1")
-	FailOnError(err)
+	FailOnError(err, "Step: Test - Excemption From Deletion")
 }
 
 func TestLatestTag(t *testing.T) {

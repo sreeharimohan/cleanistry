@@ -4,7 +4,7 @@ import "log"
 import "github.com/robfig/cron"
 
 func main() {
-	FailOnError(CheckAndGetConfigs())
+	FailOnError(CheckAndGetConfigs(), "Step: Get Config")
 	if ShouldRunOnStart() {
 		run()
 	}
@@ -23,9 +23,9 @@ func run() {
 	tagsDeleted := 0
 	// Getting all repositories from a private docker hub
 	allRepos, err := GetAllReposInRegistry()
-	FailOnError(err)
+	FailOnError(err, "Step: Get All Repos")
 	err = GetExcemptedTagsList()
-	FailOnError(err)
+	FailOnError(err, "Step: Get Excempted Tags")
 	for _, singleRepo := range allRepos {
 		excemptedTags := GetExcemptedTagsForImage(singleRepo)
 		allTags, err := GetListOfTagsForRepo(singleRepo)
@@ -63,12 +63,13 @@ func run() {
 		}
 	}
 	// Run garbage-collect on registry
-	FailOnError(RunRegistryGarbageCollection())
+	FailOnError(RunRegistryGarbageCollection(), "Step: Garbage Collection")
 }
 
 // FailOnError ...
-func FailOnError(err error) {
+func FailOnError(err error, step string) {
 	if err != nil {
+		log.Println(step)
 		log.Fatal(err)
 	}
 }
