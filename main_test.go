@@ -49,7 +49,13 @@ func TestMain(m *testing.M) {
 			return res, nil
 		},
 	)
+	httpmock.RegisterResponder("GET", "http://cleanistry.sreeharimohan.com:80/test",
+		func(req *http.Request) (*http.Response, error) {
+			res, _ := httpmock.NewJsonResponse(404, struct{}{})
+			return res, nil
+		},
+	)
 	os.Setenv("CLEANISTRY_DOCKER_HOST_URL", "cleanistry.sreeharimohan.com:80")
-	os.Setenv("CLEANISTRY_IMAGE_TAG_EXCEMPTION_TEST_API", "cleanistry.sreeharimohan.com:80/isTagExcempted")
+	os.Setenv("CLEANISTRY_IMAGE_TAG_EXCEMPTION_LIST_API", "cleanistry.sreeharimohan.com:80/isTagExcempted")
 	os.Exit(m.Run())
 }

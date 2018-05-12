@@ -12,7 +12,7 @@ import (
 func Get(url string, useHeader bool, response interface{}) (int, *http.Response, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return 500, nil, err
+		return 400, nil, err
 	}
 	if useHeader {
 		req.Header.Add("Accept", "application/vnd.docker.distribution.manifest.v2+json")
@@ -20,7 +20,7 @@ func Get(url string, useHeader bool, response interface{}) (int, *http.Response,
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return 500, res, err
+		return 502, res, err
 	}
 	if res.StatusCode != 200 {
 		return res.StatusCode, res, fmt.Errorf("GET %s - Bad status code: %d ", url, res.StatusCode)

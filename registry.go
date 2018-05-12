@@ -77,11 +77,7 @@ func GetContentDigest(repo string, tag string) (string, error) {
 }
 
 // DeleteDigest ...
-func DeleteDigest(repo string, digest string) (int, error) {
-	var data struct{}
-	resCode, err := Delete("http://"+GetDockerHostURL()+"/v2/"+repo+"/manifests/"+digest, true, data, nil)
-	if err != nil {
-		return resCode, err
-	}
-	return resCode, nil
+func DeleteDigest(repo string, digest string) error {
+	_, err := Delete("http://"+GetDockerHostURL()+"/v2/"+repo+"/manifests/"+digest, true, struct{}{}, nil)
+	return err
 }

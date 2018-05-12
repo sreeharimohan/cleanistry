@@ -24,34 +24,40 @@ func run() {
 	// Getting all repositories from a private docker hub
 	allRepos, err := GetAllReposInRegistry()
 	FailOnError(err)
+	err = GetExcemptedTagsList()
+	FailOnError(err)
 	for _, singleRepo := range allRepos {
+		excemptedTags := GetExcemptedTagsForImage(singleRepo)
 		allTags, err := GetListOfTagsForRepo(singleRepo)
 		if err != nil {
 			log.Printf("Unable to get list of tags for repo %s", singleRepo)
 			continue
 		}
 		for _, singleTag := range allTags {
-			log.Printf("%s:%s", singleRepo, singleTag)
-			isExcempt, err := IsTagExcemptedFromDeletion(singleRepo, singleTag)
+			isExcempt, err := IsTagExcemptedFromDeletion(excemptedTags, singleTag)
 			if err != nil {
 				log.Printf("Unable to determine if tag %s is excempt for repo %s. Error : %s", singleTag, singleRepo, err.Error())
 				continue
 			}
 			if !isExcempt {
-				isOutdate, err := IsImageTagOutdated(singleRepo, singleTag)
+				isOutdated, err := IsImageTagOutdated(singleRepo, singleTag)
 				if err != nil {
 					log.Printf("Unable to determine if tag %s is outdate for repo %s", singleTag, singleRepo)
 					continue
 				}
-				if isOutdate {
+				if isOutdated {
 					contentDigest, err := GetContentDigest(singleRepo, singleTag)
 					if err != nil {
 						log.Printf("Unable to get content digest for tag %s in repo %s", singleTag, singleRepo)
+					} else {
+						DeleteDigest(singleRepo, contentDigest)
+						if err != nil {
+							log.Printf("Unable to delete digest for tag %s in repo %s", singleTag, singleRepo)
+						} else {
+							tagsDeleted++
+							log.Printf(">>>>>> Deletion Done <<<<<< Total number of tags deleted: %d", tagsDeleted)
+						}
 					}
-					log.Println(DeleteDigest(singleRepo, contentDigest))
-					log.Printf(">>>>>> Deletion Done <<<<<<")
-					tagsDeleted++
-					log.Printf("Total number of tags deleted: %d", tagsDeleted)
 				}
 			}
 		}
