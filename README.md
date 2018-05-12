@@ -22,9 +22,10 @@ Docker Registry Cleanup Cron runs as a docker container on the same machine as y
 ## How to run
 ```
 docker run -d \
--e CLEANISTRY_DOCKER_HOST_URL="dockerhub.company.com:5000" \
--e CLEANISTRY_CATALOG_LIMIT=5000 \
--e CLEANISTRY_IMAGE_TAG_EXCEMPTION=true \
--e CLEANISTRY_IMAGE_TAG_EXCEMPTION_LIST_API=releasecandidates.company.com/yourapiToFetchRCs \
-sreeharimohan/cleanistry
+    -e CLEANISTRY_DOCKER_HOST_URL="dockerhub.company.com:5000" \
+    -e CLEANISTRY_CATALOG_LIMIT=5000 \
+    -e CLEANISTRY_IMAGE_TAG_EXCEMPTION=true \
+    -e CLEANISTRY_IMAGE_TAG_EXCEMPTION_LIST_API=releasecandidates.company.com/yourapiToFetchRCs \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    sreeharimohan/cleanistry
 ```
