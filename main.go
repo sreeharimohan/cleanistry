@@ -26,7 +26,7 @@ func run() {
 	FailOnError(err, "Step: Get All Repos")
 	err = GetExcemptedTagsList()
 	FailOnError(err, "Step: Get Excempted Tags")
-	for _, singleRepo := range allRepos {
+	for index, singleRepo := range allRepos {
 		excemptedTags := GetExcemptedTagsForImage(singleRepo)
 		allTags, err := GetListOfTagsForRepo(singleRepo)
 		if err != nil {
@@ -62,9 +62,12 @@ func run() {
 				}
 			}
 		}
+		// Running garbage collection after every 5 repositories
+		if index%5 == 0 {
+			// Run garbage-collect on registry
+			FailOnError(RunRegistryGarbageCollection(), "Step: Garbage Collection")
+		}
 	}
-	// Run garbage-collect on registry
-	FailOnError(RunRegistryGarbageCollection(), "Step: Garbage Collection")
 }
 
 // FailOnError ...
