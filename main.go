@@ -62,8 +62,10 @@ func run() {
 				}
 			}
 		}
+		log.Printf("Checking if repository index %d is divisible by 5", index)
 		// Running garbage collection after every 5 repositories
 		if index%5 == 0 {
+			log.Printf("running garbage collection after index %d", index)
 			// Run garbage-collect on registry
 			FailOnError(RunRegistryGarbageCollection(), "Step: Garbage Collection")
 		}
